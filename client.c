@@ -34,6 +34,20 @@ static inline double time_in_double(void)
 
 }
 
+long long get_data(FILE *fp){
+    char *line = NULL;
+    size_t tmplen = 0;
+    ssize_t read;
+    read = getline(&line, &tmplen, fp);
+    if (read == -1)
+        return -1;
+
+    long long b_len;
+    sscanf(line, "%lld", &b_len);
+
+    return b_len;
+}
+
 int main(int argc , char *argv[])
 {
 
@@ -57,7 +71,8 @@ int main(int argc , char *argv[])
     info.sin_family = PF_INET;
 
     //localhost test
-    info.sin_addr.s_addr = inet_addr("172.31.3.2");
+//    info.sin_addr.s_addr = inet_addr("172.31.3.2");
+    info.sin_addr.s_addr = inet_addr("127.0.0.1");
     info.sin_port = htons(8700);
 
 
@@ -149,7 +164,6 @@ int main(int argc , char *argv[])
 
 //    char message[] = {"Hi there"};
 
-   char *line = NULL;
    int trans_rate = 1000;
    long long total = 0;
    long long less = 0;
@@ -163,18 +177,11 @@ int main(int argc , char *argv[])
 
     //double start = time_in_double();
 
-    ssize_t read;
-    size_t tmplen = 0;
-//    if(read = getline(&line, &tmplen, fp) != -1) {
-       // printf("@@ %s\n", line);
- //   }
-    if(read = getline(&line, &tmplen, fp) == -1) {
-        printf("kill @@ %s\n", line);
-
-        break;
-    }
     long long b_len;
-    sscanf(line, "%lld", &b_len);
+        
+    if((b_len = get_data(fp)) == -1)
+        break;
+  
         //printf("QQ %lld\n", b_len);
     TOTAL_DATA_SIZE = b_len;
     long long total_len = TOTAL_DATA_SIZE;
@@ -294,8 +301,6 @@ int ret = 0 ;
 //   fclose(fp);
 	close(sockfd);
 
-    if(line)
-        free(line);
        fclose(fp);
     free(buf);
     return 0;

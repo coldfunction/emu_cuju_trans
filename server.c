@@ -15,7 +15,6 @@
 #define TOTAL_LEN (64*1024)
 
 long long get_data(FILE *fp){
-
     char *line = NULL;
     size_t tmplen = 0;
     ssize_t read;
@@ -60,7 +59,8 @@ int main(int argc , char *argv[])
     bzero(&serverInfo,sizeof(serverInfo));
 
     serverInfo.sin_family = PF_INET;
-    serverInfo.sin_addr.s_addr = inet_addr("172.31.3.2");
+//    serverInfo.sin_addr.s_addr = inet_addr("172.31.3.2");
+    serverInfo.sin_addr.s_addr = inet_addr("127.0.0.1");
     serverInfo.sin_port = htons(8700);
     bind(sockfd,(struct sockaddr *)&serverInfo,sizeof(serverInfo));
     listen(sockfd,5);
